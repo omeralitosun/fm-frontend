@@ -1,7 +1,9 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/field/new">New Field</router-link> | 
+    <router-link to="/field/detail">Detail Field</router-link> | 
+    <router-link to="/field">List Field</router-link>
   </nav>
   <router-view/>
 </template>
