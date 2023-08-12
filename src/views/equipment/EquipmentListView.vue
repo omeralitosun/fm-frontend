@@ -39,13 +39,13 @@
 import router from '@/router';
 
 export default {
-  name: "FieldListView",
+  name: "EquipmentListView",
   data() {
     return {
-      fieldName: ["*", "TARLA", "DÖNÜM"],
+      fieldName: ["*", "EKİPMAN", "TİPİ"],
       datas: [],
-      url: "http://localhost:8081/api/v1/field",
-      routerUrl: "/field/detail/",
+      url: "http://localhost:8081/api/v1/equipment",
+      routerUrl: "/equipment/detail/",
     };
   },
   mounted() {
@@ -57,6 +57,7 @@ export default {
     fetch(_this.url, requestOptions)
       .then((response) => response.json())
       .then((data) => (_this.datas = data));
+      console.log(this.datas);
   },
   methods: {
     del: function (key) {

@@ -2,12 +2,12 @@
   <div class="detail">
     <div class="content">
       <div class="item">
-        <label for="name">Tarla Adı</label>
+        <label for="name">Ekipman Adı</label>
         <div type="text" name="name" id="name">{{ datas.name }}</div>
       </div>
       <div class="item">
-        <label for="decare">Dönüm</label>
-        <div type="text" name="decare" id="decare">{{ datas.decare }}</div>
+        <label for="decare">Ekipman Tipi</label>
+        <div type="text" name="type" id="type">{{ datas.equipmentType }}</div>
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       datas: {},
-      url: "http://localhost:8081/api/v1/field/" + this.id,
+      url: "http://localhost:8081/api/v1/equipment/" + this.id,
     };
   },
   mounted() {
