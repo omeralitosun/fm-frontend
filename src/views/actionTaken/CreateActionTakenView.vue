@@ -2,24 +2,48 @@
   <div class="create">
     <div class="content">
       <div class="item">
-        <input
-          type="text"
-          name="name"
-          placeholder="Ekipman Adı"
-          v-model="data.name"
-        />
-      </div>
-      <div class="item">
-        <select v-model="data.equipmentType" placeholder="Ekipman Tipi">
-          <option disabled value="">Ekipman Tipi</option>
+        <select v-model="data.process" placeholder="İşlem">
+          <option disabled value="">Yapılan İşlem</option>
           <option
-            v-for="(option,key, index) in options"
+            v-for="(option, key, index) in options"
             :key="index"
             :value="option"
           >
             {{ key }}
           </option>
         </select>
+      </div>
+      <div class="item">
+        <input
+          type="number"
+          name="cost"
+          placeholder="Maliyet"
+          v-model="data.cost"
+        />
+      </div>
+      <div class="item">
+        <input
+          type="text-area"
+          name="comment"
+          placeholder="Açıklama"
+          v-model="data.comment"
+        />
+      </div>
+      <div class="item">
+        <input
+          type="datetime-local"
+          name="date"
+          placeholder="Tarih"
+          v-model="data.date"
+        />
+      </div>
+      <div class="item">
+        <input
+          type="text"
+          name="fieldId"
+          placeholder="Tarla"
+          v-model="data.fieldId"
+        />
       </div>
     </div>
     <button class="btn-submit" @click="submit()">Kaydet</button>
@@ -33,16 +57,20 @@ export default {
   name: "CreateActionTakenView",
   data() {
     return {
-      options:null,
+      options: null,
       data: {
-        name: null,
-        equipmentType: null,
+        process: null,
+        cost: null,
+        comment: null,
+        date: null,
+        fieldId: null,
       },
-      url: "http://localhost:8081/api/v1/equipment",
+      url: "http://localhost:8081/api/v1/actionTaken",
     };
   },
   methods: {
     submit: function () {
+      console.log(this.data)
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,7 +82,7 @@ export default {
             return response.json();
           }
         })
-        .then((data) => router.push({ path: "/Equipment/detail/" + data.id }));
+        .then((data) => router.push({ path: "/action-taken/detail/" + data.id }));
     },
   },
   mounted() {
@@ -63,9 +91,9 @@ export default {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     };
-    fetch("http://localhost:8081/api/v1/enums/equipment-type", requestOptions)
+    fetch("http://localhost:8081/api/v1/enums/process", requestOptions)
       .then((response) => response.json())
-      .then((data) => _this.options=data);
+      .then((data) => (_this.options = data));
   },
 };
 </script>

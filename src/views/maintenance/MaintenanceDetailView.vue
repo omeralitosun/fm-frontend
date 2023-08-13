@@ -2,12 +2,24 @@
   <div class="detail">
     <div class="content">
       <div class="item">
-        <label for="name">Ekipman Adı</label>
-        <div type="text" name="name" id="name">{{ datas.name }}</div>
+        <label for="name">Ekipman</label>
+        <div type="text" name="name" id="name">{{ datas.equipmentId }}</div>
       </div>
       <div class="item">
-        <label for="decare">Ekipman Tipi</label>
-        <div type="text" name="type" id="type">{{ datas.equipmentType }}</div>
+        <label for="decare">Bakım Tipi</label>
+        <div type="text" name="type" id="type">{{ datas.maintenanceType }}</div>
+      </div>
+      <div class="item">
+        <label for="decare">Maliyet</label>
+        <div type="text" name="type" id="type">{{ datas.cost }}</div>
+      </div>
+      <div class="item">
+        <label for="decare">Tarih</label>
+        <div type="text" name="type" id="type">{{ datas.date }}</div>
+      </div>
+      <div class="item">
+        <label for="decare">Açıklama</label>
+        <div type="text" name="type" id="type">{{ datas.comment }}</div>
       </div>
     </div>
   </div>
@@ -19,7 +31,7 @@ export default {
   data() {
     return {
       datas: {},
-      url: "http://localhost:8081/api/v1/equipment/" + this.id,
+      url: "http://localhost:8081/api/v1/maintenance/" + this.id,
     };
   },
   mounted() {

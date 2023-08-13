@@ -2,12 +2,32 @@
   <div class="detail">
     <div class="content">
       <div class="item">
-        <label for="name">Ekipman Adı</label>
+        <label for="name">Ürün Adı</label>
         <div type="text" name="name" id="name">{{ datas.name }}</div>
       </div>
       <div class="item">
-        <label for="decare">Ekipman Tipi</label>
-        <div type="text" name="type" id="type">{{ datas.equipmentType }}</div>
+        <label for="decare">Miktar</label>
+        <div type="text" name="type" id="type">{{ datas.amount }}</div>
+      </div>
+      <div class="item">
+        <label for="decare">Birim</label>
+        <div type="text" name="type" id="type">{{ datas.unit }}</div>
+      </div>
+      <div class="item">
+        <label for="decare">Birim Fiyatı</label>
+        <div type="text" name="type" id="type">{{ datas.unitPrice }}</div>
+      </div>
+      <div class="item">
+        <label for="decare">Toplam Fiyat</label>
+        <div type="text" name="type" id="type">{{ datas.totalPrice }}</div>
+      </div>
+      <div class="item">
+        <label for="decare">Açıklama</label>
+        <div type="text" name="type" id="type">{{ datas.comment }}</div>
+      </div>
+      <div class="item">
+        <label for="decare">Tarih</label>
+        <div type="text" name="type" id="type">{{ datas.date }}</div>
       </div>
     </div>
   </div>
@@ -19,7 +39,7 @@ export default {
   data() {
     return {
       datas: {},
-      url: "http://localhost:8081/api/v1/equipment/" + this.id,
+      url: "http://localhost:8081/api/v1/receivedProduct/" + this.id,
     };
   },
   mounted() {

@@ -106,7 +106,7 @@ const routes = [
   },{
     path: '/received-product',
     name: 'receivedProductList',
-    component: ActionTakenListView
+    component: ReceivedProductListView
   },
   // Selled Product
   {

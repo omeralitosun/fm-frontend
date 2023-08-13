@@ -42,10 +42,10 @@ export default {
   name: "ActionTakenListView",
   data() {
     return {
-      fieldName: ["*", "EKİPMAN", "TİPİ"],
+      fieldName: ["*", "YAPILAN İŞLEM", "MALİYET", "AÇIKLAMA", "TARİH", "TARLA"],
       datas: [],
-      url: "http://localhost:8081/api/v1/equipment",
-      routerUrl: "/equipment/detail/",
+      url: "http://localhost:8081/api/v1/actionTaken",
+      routerUrl: "/action-taken/detail/",
     };
   },
   mounted() {

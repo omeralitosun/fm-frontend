@@ -42,10 +42,10 @@ export default {
   name: "MaintenanceListView",
   data() {
     return {
-      fieldName: ["*", "EKİPMAN", "TİPİ"],
+      fieldName: ["*", "BAKIM TİPİ", "MALİYET", "AÇIKLAMA", "TARİH", "EKİPMAN"],
       datas: [],
-      url: "http://localhost:8081/api/v1/equipment",
-      routerUrl: "/equipment/detail/",
+      url: "http://localhost:8081/api/v1/maintenance",
+      routerUrl: "/maintenance/detail/",
     };
   },
   mounted() {

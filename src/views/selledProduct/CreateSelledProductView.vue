@@ -5,21 +5,53 @@
         <input
           type="text"
           name="name"
-          placeholder="Ekipman Adı"
+          placeholder="Ürün Adı"
           v-model="data.name"
         />
       </div>
       <div class="item">
-        <select v-model="data.equipmentType" placeholder="Ekipman Tipi">
-          <option disabled value="">Ekipman Tipi</option>
+        <input
+          type="number"
+          name="amount"
+          placeholder="Miktarı"
+          v-model="data.amount"
+        />
+      </div>
+      <div class="item">
+        <select v-model="data.unit" placeholder="Birim">
+          <option disabled value="">Birim</option>
           <option
-            v-for="(option,key, index) in options"
+            v-for="(option, key, index) in options"
             :key="index"
             :value="option"
           >
             {{ key }}
           </option>
         </select>
+      </div>
+      <div class="item">
+        <input
+          type="number"
+          name="unitPrice"
+          placeholder="Birim Fiyatı"
+          v-model="data.unitPrice"
+        />
+      </div>
+      <div class="item">
+        <input
+          type="text"
+          name="comment"
+          placeholder="Açıklama"
+          v-model="data.comment"
+        />
+      </div>
+      <div class="item">
+        <input
+          type="datetime-local"
+          name="date"
+          placeholder="Tarih"
+          v-model="data.date"
+        />
       </div>
     </div>
     <button class="btn-submit" @click="submit()">Kaydet</button>
@@ -36,9 +68,13 @@ export default {
       options:null,
       data: {
         name: null,
-        equipmentType: null,
+        amount: null,
+        unit: null,
+        unitPrice: null,
+        comment: null,
+        date: null,
       },
-      url: "http://localhost:8081/api/v1/equipment",
+      url: "http://localhost:8081/api/v1/selledProduct",
     };
   },
   methods: {
@@ -54,7 +90,7 @@ export default {
             return response.json();
           }
         })
-        .then((data) => router.push({ path: "/Equipment/detail/" + data.id }));
+        .then((data) => router.push({ path: "/selled-product/detail/" + data.id }));
     },
   },
   mounted() {
@@ -63,7 +99,7 @@ export default {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     };
-    fetch("http://localhost:8081/api/v1/enums/equipment-type", requestOptions)
+    fetch("http://localhost:8081/api/v1/enums/unit", requestOptions)
       .then((response) => response.json())
       .then((data) => _this.options=data);
   },

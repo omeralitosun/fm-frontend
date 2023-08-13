@@ -42,10 +42,10 @@ export default {
   name: "SelledProductListView",
   data() {
     return {
-      fieldName: ["*", "EKİPMAN", "TİPİ"],
+      fieldName: ["*", "ÜRÜN ADI", "MİKTAR", "BİRİM", "BİRİM FİYATI", "TOPLAM FİYATI", "AÇIKLAMA", "TARİH"],
       datas: [],
-      url: "http://localhost:8081/api/v1/equipment",
-      routerUrl: "/equipment/detail/",
+      url: "http://localhost:8081/api/v1/selledProduct",
+      routerUrl: "/selled-product/detail/",
     };
   },
   mounted() {
