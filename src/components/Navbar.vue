@@ -1,6 +1,7 @@
 <template>
   <div class="topnav" id="myTopnav">
     <router-link to="/">Home</router-link>
+    <!--Field-->
     <div class="dropdown">
       <button class="dropbtn">
         Tarla
@@ -11,6 +12,7 @@
         <router-link to="/field">Tarla Listesi</router-link>
       </div>
     </div>
+    <!--Equipment-->
     <div class="dropdown">
       <button class="dropbtn">
         Ekipman
@@ -19,6 +21,50 @@
       <div class="dropdown-content">
         <router-link to="/equipment/new">Yeni Ekipman</router-link>
         <router-link to="/equipment">Ekipman Listesi</router-link>
+      </div>
+    </div>
+    <!--Action Taken-->
+    <div class="dropdown">
+      <button class="dropbtn">
+        Alınan Aksiyonlar
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <router-link to="/action-taken/new">Yeni Aksiyon</router-link>
+        <router-link to="/action-taken">Aksiyon Listesi</router-link>
+      </div>
+    </div>
+    <!--Maintenance-->
+    <div class="dropdown">
+      <button class="dropbtn">
+        Bakım
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <router-link to="/maintenance/new">Yeni Bakım</router-link>
+        <router-link to="/maintenance">Bakım Listesi</router-link>
+      </div>
+    </div>
+    <!--Received Product-->
+    <div class="dropdown">
+      <button class="dropbtn">
+        Alınan Ürün
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <router-link to="/received-product/new">Yeni Alınan Ürün</router-link>
+        <router-link to="/received-product">Alınan Ürün Listesi</router-link>
+      </div>
+    </div>
+    <!--Selled Product-->
+    <div class="dropdown">
+      <button class="dropbtn">
+        Satılan Ürün
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <router-link to="/selled-product/new">Yeni Satılan Ürün</router-link>
+        <router-link to="/selled-product">Satılan Ürün Listesi</router-link>
       </div>
     </div>
     <a href="javascript:void(0);" class="icon" @click="func()">&#9776;</a>
