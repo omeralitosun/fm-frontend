@@ -1,15 +1,15 @@
 <template>
   <div class="topnav" id="myTopnav">
-    <router-link to="/">Home</router-link>
+    <router-link to="/" @click="closeResponsive()">Home</router-link>
     <!--Field-->
-    <div class="dropdown">
+    <div class="dropdown" >
       <button class="dropbtn">
         Tarla
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <router-link to="/field/new">Yeni Tarla</router-link>
-        <router-link to="/field">Tarla Listesi</router-link>
+        <router-link to="/field/new" @click="closeResponsive()">Yeni Tarla</router-link>
+        <router-link to="/field" @click="closeResponsive()">Tarla Listesi</router-link>
       </div>
     </div>
     <!--Equipment-->
@@ -19,8 +19,8 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <router-link to="/equipment/new">Yeni Ekipman</router-link>
-        <router-link to="/equipment">Ekipman Listesi</router-link>
+        <router-link to="/equipment/new" @click="closeResponsive()">Yeni Ekipman</router-link>
+        <router-link to="/equipment" @click="closeResponsive()">Ekipman Listesi</router-link>
       </div>
     </div>
     <!--Action Taken-->
@@ -30,8 +30,8 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <router-link to="/action-taken/new">Yeni Aksiyon</router-link>
-        <router-link to="/action-taken">Aksiyon Listesi</router-link>
+        <router-link to="/action-taken/new" @click="closeResponsive()">Yeni Aksiyon</router-link>
+        <router-link to="/action-taken" @click="closeResponsive()">Aksiyon Listesi</router-link>
       </div>
     </div>
     <!--Maintenance-->
@@ -41,8 +41,8 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <router-link to="/maintenance/new">Yeni Bakım</router-link>
-        <router-link to="/maintenance">Bakım Listesi</router-link>
+        <router-link to="/maintenance/new" @click="closeResponsive()">Yeni Bakım</router-link>
+        <router-link to="/maintenance" @click="closeResponsive()">Bakım Listesi</router-link>
       </div>
     </div>
     <!--Received Product-->
@@ -52,8 +52,8 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <router-link to="/received-product/new">Yeni Alınan Ürün</router-link>
-        <router-link to="/received-product">Alınan Ürün Listesi</router-link>
+        <router-link to="/received-product/new" @click="closeResponsive()">Yeni Alınan Ürün</router-link>
+        <router-link to="/received-product" @click="closeResponsive()">Alınan Ürün Listesi</router-link>
       </div>
     </div>
     <!--Selled Product-->
@@ -63,8 +63,8 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <router-link to="/selled-product/new">Yeni Satılan Ürün</router-link>
-        <router-link to="/selled-product">Satılan Ürün Listesi</router-link>
+        <router-link to="/selled-product/new" @click="closeResponsive()">Yeni Satılan Ürün</router-link>
+        <router-link to="/selled-product" @click="closeResponsive()">Satılan Ürün Listesi</router-link>
       </div>
     </div>
     <a href="javascript:void(0);" class="icon" @click="func()">&#9776;</a>
@@ -88,6 +88,10 @@ export default {
         x.className = "topnav";
       }
     },
+    closeResponsive: function(){
+      var x = document.getElementById("myTopnav");
+      x.className = "topnav";
+    }
   },
 };
 </script>

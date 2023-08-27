@@ -2,6 +2,10 @@
   <div class="detail">
     <div class="content">
       <div class="item">
+        <label for="decare">Tarla</label>
+        <div type="text" name="type" id="type"><router-link :to="'/field/detail/'+returnId(field)">{{ datas.field?datas.field.name:'' }}</router-link></div>
+      </div>
+      <div class="item">
         <label for="name">Yapılan İşlem</label>
         <div type="text" name="name" id="name">{{ datas.process }}</div>
       </div>
@@ -17,11 +21,8 @@
         <label for="decare">Tarih</label>
         <div type="text" name="type" id="type">{{ datas.date }}</div>
       </div>
-      <div class="item">
-        <label for="decare">Tarla</label>
-        <div type="text" name="type" id="type">{{ datas.fieldId }}</div>
-      </div>
     </div>
+    
   </div>
 </template>
   
@@ -31,7 +32,7 @@ export default {
   data() {
     return {
       datas: {},
-      url: "http://localhost:8081/api/v1/actionTaken/" + this.id,
+      url: process.env.VUE_APP_API_BASE_URL + "/api/v1/actionTaken/" + this.id,
     };
   },
   mounted() {
@@ -42,8 +43,16 @@ export default {
     };
     fetch(_this.url, requestOptions)
       .then((response) => response.json())
-      .then((data) => _this.datas=data);
+      .then((data) => {
+        _this.datas = data;
+        _this.field = data.field;
+      });
   },
+  methods:{
+    returnId: function(data){
+      return data?data.id:'';
+    }
+  }
 };
 </script>
   

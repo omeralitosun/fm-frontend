@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       datas: {},
-      url: "http://localhost:8081/api/v1/receivedProduct/" + this.id,
+      url:  process.env.VUE_APP_API_BASE_URL+"/api/v1/receivedProduct/" + this.id,
     };
   },
   mounted() {

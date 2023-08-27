@@ -44,7 +44,7 @@ export default {
     return {
       fieldName: ["*", "ÜRÜN ADI", "MİKTAR", "BİRİM", "BİRİM FİYATI", "TOPLAM FİYATI", "AÇIKLAMA", "TARİH"],
       datas: [],
-      url: "http://localhost:8081/api/v1/receivedProduct",
+      url:  process.env.VUE_APP_API_BASE_URL+"/api/v1/receivedProduct",
       routerUrl: "/received-product/detail/",
     };
   },

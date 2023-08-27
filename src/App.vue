@@ -13,6 +13,7 @@ components:{
 }
 </script>
 <style>
+
 * {
   margin: 0px;
   padding: 0px;
@@ -37,20 +38,43 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 }
-
-.btn-submit {
+.btn{
   width: 80px;
   height: 30px;
-  background-color: #3ba352;
-  color: aliceblue;
   font-size: 17px;
   border-radius: 5px;
 }
+.btn-submit {
+  background-color: #44be5f;
+  color: aliceblue;
+}
 .btn-submit:hover {
-  background-color: #315f3b;
+  background-color: #4e945d;
   cursor: pointer;
 }
 .btn-submit:active {
+  background-color: #8f8f8f;
+}
+.btn-warning {
+  background-color: #d6b74f;
+  color: aliceblue;
+}
+.btn-warning:hover {
+  background-color: #92864c;
+  cursor: pointer;
+}
+.btn-warning:active {
+  background-color: #8f8f8f;
+}
+.btn-error {
+  background-color: #cf4a4a;
+  color: aliceblue;
+}
+.btn-error:hover {
+  background-color: #8f4949;
+  cursor: pointer;
+}
+.btn-error:active {
   background-color: #8f8f8f;
 }
 .create {
@@ -69,15 +93,20 @@ nav a.router-link-exact-active {
 .item {
   padding: 10px;
 }
-.item input {
+.item .input{
   width: 300px;
-  height: 30px;
+  height: 50px;
   font-size: 15px;
+  padding: 0px;
 }
-.item select {
+.item div{
   width: 300px;
-  height: 30px;
+  height: 50px;
   font-size: 15px;
+  padding-top: 10px;
+}
+.item label {
+  border-bottom: solid;
 }
 .detail {
   position: relative;
@@ -87,12 +116,6 @@ nav a.router-link-exact-active {
 .item label {
   font-size: 15px;
   font-weight: 700;
-}
-.item div {
-  width: 300px;
-  height: 30px;
-  border-top: solid;
-  padding-top: 10px;
 }
 table {
   border: 1px solid #ccc;
@@ -124,6 +147,12 @@ table th {
   font-size: 0.85em;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  background-color: #bdf8b1;
+}
+
+td button{
+  padding: 5px;
+  border-radius: 5px;
   background-color: #bdf8b1;
 }
 

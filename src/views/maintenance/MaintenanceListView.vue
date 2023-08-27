@@ -11,23 +11,44 @@
       </thead>
       <tbody>
         <tr v-for="(data, ind) in datas" :key="ind">
-          <td
-            :data-label="fieldName[index]"
-            v-for="(val, key, index) in data"
-            :key="index"
-          >
-            <div v-if="key != 'id'">
-              {{ val }}
-            </div>
-            <div v-else>
-              {{ ind + 1 }}
+          <td>
+            <div>
+              {{ ind+1 }}
             </div>
           </td>
           <td>
-            <router-link :to="routerUrl + data.id"
-              ><button>Detay</button></router-link
+            <div>
+              <router-link :to="'/field/detail/'+returnId(data.equipment)" >{{ data.equipment!=null?data.equipment.name:'' }}</router-link>
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ data.maintenanceType }}
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ data.cost }}
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ data.date }}
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ data.comment }}
+            </div>
+          </td>
+          <td>
+            <router-link :to="routerUrl +'/detail/'+ data.id"
+              ><button class="btn btn-submit">Detay</button></router-link
             >
-            <button @click="del(data.id)">Sil</button>
+            <router-link :to="routerUrl +'/update/'+ data.id"
+              ><button class="btn btn-warning">Güncelle</button></router-link
+            >
+            <button @click="del(data.id)" class="btn btn-error">Sil</button>
           </td>
         </tr>
       </tbody>
@@ -42,10 +63,10 @@ export default {
   name: "MaintenanceListView",
   data() {
     return {
-      fieldName: ["*", "BAKIM TİPİ", "MALİYET", "AÇIKLAMA", "TARİH", "EKİPMAN"],
+      fieldName: ["*", "EKİPMAN", "BAKIM TİPİ", "MALİYET", "TARİH", "AÇIKLAMA"],
       datas: [],
-      url: "http://localhost:8081/api/v1/maintenance",
-      routerUrl: "/maintenance/detail/",
+      url: process.env.VUE_APP_API_BASE_URL+"/api/v1/maintenance",
+      routerUrl: "/maintenance",
     };
   },
   mounted() {
@@ -77,6 +98,9 @@ export default {
           })
       }
     },
+    returnId: function(data){
+      return data?data.id:'';
+    }
   },
 };
 </script>

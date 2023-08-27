@@ -2,7 +2,9 @@
   <div class="create">
     <div class="content">
       <div class="item">
+        <label>Ürün Adı</label> <br />
         <input
+          class="input"
           type="text"
           name="name"
           placeholder="Ürün Adı"
@@ -10,7 +12,9 @@
         />
       </div>
       <div class="item">
+        <label>Miktarı</label> <br />
         <input
+          class="input"
           type="number"
           name="amount"
           placeholder="Miktarı"
@@ -18,8 +22,9 @@
         />
       </div>
       <div class="item">
-        <select v-model="data.unit" placeholder="Birim">
-          <option disabled value="">Birim</option>
+        <label>Birim</label> <br />
+        <select class="input" v-model="data.unit" placeholder="Birim">
+          <option disabled :value="null">Birim</option>
           <option
             v-for="(option, key, index) in options"
             :key="index"
@@ -30,7 +35,9 @@
         </select>
       </div>
       <div class="item">
+        <label>Birim Fiyatı</label> <br />
         <input
+          class="input"
           type="number"
           name="unitPrice"
           placeholder="Birim Fiyatı"
@@ -38,7 +45,9 @@
         />
       </div>
       <div class="item">
+        <label>Açıklama</label> <br />
         <input
+          class="input"
           type="text"
           name="comment"
           placeholder="Açıklama"
@@ -46,7 +55,9 @@
         />
       </div>
       <div class="item">
+        <label>Tarih</label> <br />
         <input
+          class="input"
           type="datetime-local"
           name="date"
           placeholder="Tarih"
@@ -54,7 +65,7 @@
         />
       </div>
     </div>
-    <button class="btn-submit" @click="submit()">Kaydet</button>
+    <button class="btn btn-submit" @click="submit()">Kaydet</button>
   </div>
 </template>
 
@@ -74,7 +85,8 @@ export default {
         comment: null,
         date: null,
       },
-      url: "http://localhost:8081/api/v1/receivedProduct",
+      postReceivedUrl: process.env.VUE_APP_API_BASE_URL+"/api/v1/receivedProduct",
+      getUnitUrl: process.env.VUE_APP_API_BASE_URL+"/api/v1/enums/unit"
     };
   },
   methods: {
@@ -84,13 +96,15 @@ export default {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       };
-      fetch(this.url, requestOptions)
+      fetch(this.postReceivedUrl, requestOptions)
         .then((response) => {
           if (response.ok) {
             return response.json();
           }
         })
-        .then((data) => router.push({ path: "/received-product/detail/" + data.id }));
+        .then((data) =>
+          router.push({ path: "/received-product/detail/" + data.id })
+        );
     },
   },
   mounted() {
@@ -99,7 +113,7 @@ export default {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     };
-    fetch("http://localhost:8081/api/v1/enums/unit", requestOptions)
+    fetch(this.getUnitUrl, requestOptions)
       .then((response) => response.json())
       .then((data) => (_this.options = data));
   },

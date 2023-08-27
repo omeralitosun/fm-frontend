@@ -3,7 +3,11 @@
     <div class="content">
       <div class="item">
         <label for="name">Ekipman</label>
-        <div type="text" name="name" id="name">{{ datas.equipmentId }}</div>
+        <div type="text" name="type" id="type">
+          <router-link :to="'/equipment/detail/' + returnId(equipment)">{{
+            datas.equipment ? datas.equipment.name : ""
+          }}</router-link>
+        </div>
       </div>
       <div class="item">
         <label for="decare">Bakım Tipi</label>
@@ -31,7 +35,7 @@ export default {
   data() {
     return {
       datas: {},
-      url: "http://localhost:8081/api/v1/maintenance/" + this.id,
+      url: process.env.VUE_APP_API_BASE_URL + "/api/v1/maintenance/" + this.id,
     };
   },
   mounted() {
@@ -42,7 +46,15 @@ export default {
     };
     fetch(_this.url, requestOptions)
       .then((response) => response.json())
-      .then((data) => _this.datas=data);
+      .then((data) => {
+        _this.datas = data;
+        _this.equipment = data.equipment;
+      });
+  },
+  methods: {
+    returnId: function (data) {
+      return data ? data.id : "";
+    },
   },
 };
 </script>

@@ -2,18 +2,28 @@
   <div class="create">
     <div class="content">
       <div class="item">
-        <input
-          type="text"
-          name="equipmentId"
-          placeholder="Ekipman"
-          v-model="data.equipmentId"
-        />
+        <label>Ekipman</label> <br />
+        <select class="input" placeholder="Ekipman" v-model="data.equipmentId">
+          <option disabled :value="null">Ekipman</option>
+          <option
+            v-for="(equipment, index) in equipments"
+            :key="index"
+            :value="equipment.id"
+          >
+            {{ equipment.name }}
+          </option>
+        </select>
       </div>
       <div class="item">
-        <select v-model="data.maintenanceType" placeholder="Bakım">
-          <option disabled value="">Bakım Tipi</option>
+        <label>Bakım Tipi</label> <br />
+        <select
+          class="input"
+          v-model="data.maintenanceType"
+          placeholder="Bakım"
+        >
+          <option disabled :value="null">Bakım Tipi</option>
           <option
-            v-for="(option, key, index) in options"
+            v-for="(option, key, index) in maintenanceTypes"
             :key="index"
             :value="option"
           >
@@ -22,7 +32,9 @@
         </select>
       </div>
       <div class="item">
+        <label>Maliyet</label> <br />
         <input
+          class="input"
           type="number"
           name="cost"
           placeholder="Maliyet"
@@ -30,7 +42,9 @@
         />
       </div>
       <div class="item">
+        <label>Tarih</label> <br />
         <input
+          class="input"
           type="datetime-local"
           name="date"
           placeholder="Tarih"
@@ -38,7 +52,9 @@
         />
       </div>
       <div class="item">
+        <label>Açıklama</label> <br />
         <input
+          class="input"
           type="text"
           name="comment"
           placeholder="Açıklama"
@@ -46,7 +62,7 @@
         />
       </div>
     </div>
-    <button class="btn-submit" @click="submit()">Kaydet</button>
+    <button class="btn btn-submit" @click="submit()">Kaydet</button>
   </div>
 </template>
 
@@ -57,7 +73,7 @@ export default {
   name: "CreateMaintenanceView",
   data() {
     return {
-      options: null,
+      maintenanceTypes: null,
       data: {
         maintenanceType: null,
         cost: null,
@@ -65,7 +81,12 @@ export default {
         date: null,
         equipmentId: null,
       },
-      url: "http://localhost:8081/api/v1/maintenance",
+      equipments: null,
+      postMaintenanceUrl:
+        process.env.VUE_APP_API_BASE_URL + "/api/v1/maintenance",
+      getEquipmentUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/equipment",
+      getMaintenanceTypeUrl:
+        process.env.VUE_APP_API_BASE_URL + "/api/v1/enums/maintenance-type",
     };
   },
   methods: {
@@ -75,24 +96,44 @@ export default {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       };
-      fetch(this.url, requestOptions)
+      fetch(this.postMaintenanceUrl, requestOptions)
         .then((response) => {
           if (response.ok) {
             return response.json();
           }
         })
-        .then((data) => router.push({ path: "/maintenance/detail/" + data.id }));
+        .then((data) =>
+          router.push({ path: "/maintenance/detail/" + data.id })
+        );
+    },
+    getEquipments: function () {
+
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(this.getEquipmentUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          
+          _this.equipments = data;
+        });
+    },
+    getMaintenanceTypes: function() {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(_this.getMaintenanceTypeUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => (_this.maintenanceTypes = data));
     },
   },
-  mounted() {
-    var _this = this;
-    const requestOptions = {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    };
-    fetch("http://localhost:8081/api/v1/enums/maintenance-type", requestOptions)
-      .then((response) => response.json())
-      .then((data) => (_this.options = data));
+  created() {
+    this.getEquipments();
+    this.getMaintenanceTypes();
   },
 };
 </script>

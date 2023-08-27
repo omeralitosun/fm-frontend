@@ -2,23 +2,18 @@
   <div class="create">
     <div class="content">
       <div class="item">
-        <label>Ekipman Adı</label> <br />
+        <label for="name">Ekipman Adı: </label>
         <input
-          class="input"
           type="text"
           name="name"
           placeholder="Ekipman Adı"
-          v-model="data.name"
+          v-model="datas.name"
         />
       </div>
       <div class="item">
-        <label>Ekipman Tipi</label> <br />
-        <select
-          class="input"
-          v-model="data.equipmentType"
-          placeholder="Ekipman Tipi"
-        >
-          <option disabled :value="null">Ekipman Tipi</option>
+        <label for="name">Ekipman Tipi: </label>
+        <select v-model="datas.equipmentType" placeholder="Ekipman Tipi">
+          <option disabled value="">Ekipman Tipi</option>
           <option
             v-for="(option, key, index) in options"
             :key="index"
@@ -29,34 +24,32 @@
         </select>
       </div>
     </div>
-    <button class="btn btn-submit" @click="submit()">Kaydet</button>
+    <button class="btn btn-submit" @click="submit()">Güncelle</button>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import router from "@/router";
 
 export default {
-  name: "CreateEquipmentView",
+  name: "UpdateEquipmentView",
+  props: ["id"],
   data() {
     return {
       options: null,
-      data: {
-        name: null,
-        equipmentType: null,
-      },
-      postEquipmentUrl: process.env.VUE_APP_API_BASE_URL+"/api/v1/equipment",
-      getTypeUrl: process.env.VUE_APP_API_BASE_URL+"/api/v1/enums/equipment-type"
+      datas: {},
+      url: "http://localhost:8081/api/v1/equipment/" + this.id,
     };
   },
   methods: {
     submit: function () {
+      
       const requestOptions = {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(this.data),
+        body: JSON.stringify(this.datas),
       };
-      fetch(this.postEquipmentUrl, requestOptions)
+      fetch(this.url, requestOptions)
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -67,18 +60,35 @@ export default {
   },
   mounted() {
     var _this = this;
-    const requestOptions = {
+
+    const requestOptions2 = {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     };
-    fetch(this.getTypeUrl, requestOptions)
+    fetch(_this.url, requestOptions2)
       .then((response) => response.json())
-      .then((data) => (_this.options = data));
+      .then((data) => {
+        _this.datas = data;
+
+        const requestOptions = {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        };
+        fetch(
+          "http://localhost:8081/api/v1/enums/equipment-type",
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            _this.options = data;
+            _this.datas.equipmentType=_this.options['Araba'];
+        });
+      });
   },
 };
 </script>
-
-<style>
+  
+  <style>
 .create .btn-submit {
   position: absolute;
   left: 100px;

@@ -6,6 +6,7 @@ import FieldDetailView from '../views/field/FieldDetailView.vue'
 import FieldListView from '../views/field/FieldListView.vue'
 
 import CreateEquipmentView from '../views/equipment/CreateEquipmentView.vue'
+import UpdateEquipmentView from '../views/equipment/UpdateEquipmentView.vue'
 import EquipmentDetailView from '../views/equipment/EquipmentDetailView.vue'
 import EquipmentListView from '../views/equipment/EquipmentListView.vue'
 
@@ -53,6 +54,12 @@ const routes = [
     path: '/equipment/new',
     name: 'createEquipment',
     component: CreateEquipmentView
+  },
+  {
+    path: '/equipment/update/:id',
+    name: 'updateEquipment',
+    component:UpdateEquipmentView,
+    props:true
   },{
     path: '/equipment/detail/:id',
     name: 'equipmentDetail',
