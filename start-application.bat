@@ -1,0 +1,1 @@
+npx pm2 start deploy.json

@@ -1,0 +1,11 @@
+{
+  "apps" : [{
+  "name" : "Farm-management-project",
+  "script": "./node_modules/@vue/cli-service/bin/vue-cli-service.js",
+  "args": "serve",
+  "env":{
+  "PORT": "5454"
+  }
+  }
+  ]
+  }

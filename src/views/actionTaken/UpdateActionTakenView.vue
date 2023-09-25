@@ -145,14 +145,16 @@
     </div>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import router from "@/router";
 
 export default {
   name: "CreateActionTakenView",
+  props: ["id"],
   data() {
     return {
+      actionId: null,
       action: {
         process: null,
         cost: null,
@@ -169,26 +171,28 @@ export default {
         date: null,
       },
       harvests: [],
-      process: null,
+      process: {},
       units: null,
       fields: null,
-      postActionUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/actionTaken",
+      putActionUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/actionTaken/",
       postHarvestsUrl:
         process.env.VUE_APP_API_BASE_URL + "/api/v1/harvest/bulkCreate",
       getFieldUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/field",
       getProcessUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/enums/process",
       getUnitUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/enums/unit",
+      getActionUrl:
+        process.env.VUE_APP_API_BASE_URL + "/api/v1/actionTaken/" + this.id,
     };
   },
   methods: {
     submit: function () {
       console.log(this.harvests);
       const requestOptions = {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.action),
       };
-      fetch(this.postActionUrl, requestOptions)
+      fetch(this.putActionUrl + this.actionId, requestOptions)
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -276,15 +280,33 @@ export default {
         .then((response) => response.json())
         .then((data) => (_this.process = data));
     },
+    getAction: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(this.getActionUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+        _this.actionId = data.id;
+          _this.action.process = _this.process[data.process];
+          _this.action.cost = data.cost;
+          _this.action.comment = data.comment;
+          _this.action.date = data.date;
+          _this.action.fieldId = data.field? data.field.id:"";
+        });
+    },
   },
   created() {
     this.getFields();
     this.getProcess();
+    this.getAction();
   },
 };
 </script>
-
-<style>
+  
+  <style>
 .create .btn-submit {
   position: absolute;
   left: 100px;

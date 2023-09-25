@@ -6,13 +6,26 @@
     <div class="create">
       <div class="content">
         <div class="item">
+          <label>Tarla</label> <br />
+          <select class="input" placeholder="Tarla" v-model="harvest.fieldId">
+            <option disabled :value="null">Tarla</option>
+            <option
+              v-for="(field, index) in fields"
+              :key="index"
+              :value="field.id"
+            >
+              {{ field.name }}
+            </option>
+          </select>
+        </div>
+        <div class="item">
           <label>Ürün Adı</label> <br />
           <input
             class="input"
             type="text"
             name="name"
             placeholder="Ürün Adı"
-            v-model="data.name"
+            v-model="harvest.name"
           />
         </div>
         <div class="item">
@@ -22,21 +35,8 @@
             type="number"
             name="amount"
             placeholder="Miktarı"
-            v-model="data.amount"
+            v-model="harvest.amount"
           />
-        </div>
-        <div class="item">
-          <label>Birim</label> <br />
-          <select class="input" v-model="data.unit" placeholder="Birim">
-            <option disabled :value="null">Birim</option>
-            <option
-              v-for="(option, key, index) in options"
-              :key="index"
-              :value="option"
-            >
-              {{ key }}
-            </option>
-          </select>
         </div>
         <div class="item">
           <label>Birim Fiyatı</label> <br />
@@ -45,17 +45,7 @@
             type="number"
             name="unitPrice"
             placeholder="Birim Fiyatı"
-            v-model="data.unitPrice"
-          />
-        </div>
-        <div class="item">
-          <label>Açıklama</label> <br />
-          <input
-            class="input"
-            type="text"
-            name="comment"
-            placeholder="Açıklama"
-            v-model="data.comment"
+            v-model="harvest.unitPrice"
           />
         </div>
         <div class="item">
@@ -65,7 +55,17 @@
             type="datetime-local"
             name="date"
             placeholder="Tarih"
-            v-model="data.date"
+            v-model="harvest.date"
+          />
+        </div>
+        <div class="item">
+          <label>Açıklama</label> <br />
+          <input
+            class="input"
+            type="text"
+            name="comment"
+            placeholder="Açıklama"
+            v-model="harvest.comment"
           />
         </div>
       </div>
@@ -78,21 +78,20 @@
 import router from "@/router";
 
 export default {
-  name: "CreateReceivedProductView",
+  name: "CreateActionTakenView",
   data() {
     return {
-      options: null,
-      data: {
+      harvest: {
+        fieldId: null,
         name: null,
         amount: null,
-        unit: null,
         unitPrice: null,
         comment: null,
         date: null,
       },
-      postReceivedUrl:
-        process.env.VUE_APP_API_BASE_URL + "/api/v1/receivedProduct",
-      getUnitUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/enums/unit",
+      fields: null,
+      postHarvestUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/harvest",
+      getFieldUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/field",
     };
   },
   methods: {
@@ -100,9 +99,11 @@ export default {
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(this.data),
+        body: JSON.stringify(this.harvest),
       };
-      fetch(this.postReceivedUrl, requestOptions)
+
+      console.log(this.harvest);
+      fetch(this.postHarvestUrl, requestOptions)
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -117,21 +118,26 @@ export default {
         .then((data) => {
           this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
           setTimeout(
-            () => router.push({ path: "/received-product/detail/" + data.id }),
+            () => router.push({ path: "/harvest/detail/" + data.id }),
             1000
           );
         });
     },
+    getFields: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(this.getFieldUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          _this.fields = data;
+        });
+    },
   },
-  mounted() {
-    var _this = this;
-    const requestOptions = {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    };
-    fetch(this.getUnitUrl, requestOptions)
-      .then((response) => response.json())
-      .then((data) => (_this.options = data));
+  created() {
+    this.getFields();
   },
 };
 </script>

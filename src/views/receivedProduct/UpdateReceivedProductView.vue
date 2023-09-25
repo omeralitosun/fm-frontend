@@ -73,14 +73,16 @@
     </div>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import router from "@/router";
 
 export default {
   name: "CreateReceivedProductView",
+  props: ["id"],
   data() {
     return {
+      receivedId: null,
       options: null,
       data: {
         name: null,
@@ -90,19 +92,21 @@ export default {
         comment: null,
         date: null,
       },
-      postReceivedUrl:
-        process.env.VUE_APP_API_BASE_URL + "/api/v1/receivedProduct",
+      putReceivedUrl:
+        process.env.VUE_APP_API_BASE_URL + "/api/v1/receivedProduct/",
       getUnitUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/enums/unit",
+      getReceivedUrl:
+        process.env.VUE_APP_API_BASE_URL + "/api/v1/receivedProduct/" + this.id,
     };
   },
   methods: {
     submit: function () {
       const requestOptions = {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       };
-      fetch(this.postReceivedUrl, requestOptions)
+      fetch(this.putReceivedUrl + this.receivedId, requestOptions)
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -122,21 +126,43 @@ export default {
           );
         });
     },
+    getUnit: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(this.getUnitUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => (_this.options = data));
+    },
+    getReceivedProduct: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(this.getReceivedUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+            _this.receivedId = _this.id;
+            _this.data.name= data.name;
+            _this.data.amount= data.amount;
+            _this.data.unit= _this.options[data.unit];
+            _this.data.unitPrice= data.unitPrice;
+            _this.data.comment= data.comment;
+            _this.data.date= data.date;
+        });
+    },
   },
-  mounted() {
-    var _this = this;
-    const requestOptions = {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    };
-    fetch(this.getUnitUrl, requestOptions)
-      .then((response) => response.json())
-      .then((data) => (_this.options = data));
+  created() {
+    this.getUnit();
+    this.getReceivedProduct();
   },
 };
 </script>
-
-<style>
+  
+  <style>
 .create .btn-submit {
   position: absolute;
   left: 100px;

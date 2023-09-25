@@ -25,9 +25,9 @@
           </td>
           <td>
             <router-link :to="routerUrl + data.id"
-              ><button>Detay</button></router-link
+              ><button class="btn btn-submit">Detay</button></router-link
             >
-            <button @click="del(data.id)">Sil</button>
+            <button @click="del(data.id)" class="btn btn-error">Sil</button>
           </td>
         </tr>
       </tbody>

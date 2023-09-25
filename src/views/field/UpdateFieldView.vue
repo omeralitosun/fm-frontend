@@ -30,35 +30,37 @@
     </div>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import router from "@/router";
 
 export default {
-  name: "CreateFieldView",
+  name: "UpdateFieldView",
+  props: ["id"],
   data() {
     return {
+      fieldId: null,
       data: {
         name: null,
         decare: null,
       },
-      postUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/field",
+      putUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/field/",
+      getUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/field/" + this.id,
     };
   },
   methods: {
     submit: function () {
-      
       const requestOptions = {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       };
 
-      fetch(this.postUrl, requestOptions)
+      fetch(this.putUrl+this.fieldId, requestOptions)
         .then((response) => {
           if (response.ok) {
             return response.json();
-          }else{
+          } else {
             this.$refs.alert.showAlert(
               "error",
               "Beklenmeyen bir hata oluştu",
@@ -67,15 +69,33 @@ export default {
           }
         })
         .then((data) => {
-          this.$refs.alert.showAlert("success", "Kayıt Başarılı","Başarılı");
-          setTimeout(() => router.push({ path: "/field/detail/" + data.id }), 1000);
+          this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
+          setTimeout(
+            () => router.push({ path: "/field/detail/" + data.id }),
+            1000
+          );
         });
     },
   },
+  created(){
+    var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(_this.getUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          _this.fieldId = data.id;
+          _this.data.name = data.name;
+          _this.data.decare = data.decare;
+          console.log(_this.data);
+        });
+  }
 };
 </script>
-
-<style>
+  
+  <style>
 .create .btn-submit {
   position: absolute;
   left: 100px;

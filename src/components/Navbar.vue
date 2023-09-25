@@ -34,6 +34,17 @@
         <router-link to="/action-taken" @click="closeResponsive()">Aksiyon Listesi</router-link>
       </div>
     </div>
+    <!--Harvest-->
+    <div class="dropdown">
+      <button class="dropbtn">
+        Biçilen Ürünler
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <router-link to="/harvest/new" @click="closeResponsive()">Yeni Biçilen Ürün</router-link>
+        <router-link to="/harvest" @click="closeResponsive()">Biçilen Ürün Listesi</router-link>
+      </div>
+    </div>
     <!--Maintenance-->
     <div class="dropdown">
       <button class="dropbtn">

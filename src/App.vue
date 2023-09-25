@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar></Navbar>
-    <router-view/>
+    <router-view @alert="alertBox()"/>
   </div>
 </template>
 <script>
@@ -81,14 +81,14 @@ nav a.router-link-exact-active {
   position: relative;
   min-height: 80vh;
   background-color: #bdf8b1;
+  padding: 50px 0px;
 }
 .content {
-  padding: 50px;
   display: flex;
   flex-wrap: wrap;
   max-width: 95vw;
-  margin: 0px auto;
-  width: 100%;
+  margin: 0px auto 20px;
+  width: 100vw;
 }
 .item {
   padding: 10px;

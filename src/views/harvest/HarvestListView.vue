@@ -11,21 +11,53 @@
       </thead>
       <tbody>
         <tr v-for="(data, ind) in datas" :key="ind">
-          <td
-            :data-label="fieldName[index]"
-            v-for="(val, key, index) in data"
-            :key="index"
-          >
-            <div v-if="key != 'id'">
-              {{ val }}
-            </div>
-            <div v-else>
-              {{ ind + 1 }}
+          <td>
+            <div>
+              {{ ind+1 }}
             </div>
           </td>
           <td>
-            <router-link :to="routerUrl + data.id"
+            <div>
+              <router-link :to="'/field/detail/'+returnId(data.field)" >{{ data.field!=null?data.field.name:'' }}</router-link>
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ data.name }}
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ data.amount }}
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ data.unitPrice }}
+            </div>
+          </td>
+          <td>
+            <div>
+              {{  Number(data.totalPrice)
+            .toLocaleString('tr') }}
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ data.date }}
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ data.comment }}
+            </div>
+          </td>
+          <td>
+            <router-link :to="routerUrl +'/detail/'+ data.id"
               ><button class="btn btn-submit">Detay</button></router-link
+            >
+            <router-link :to="routerUrl +'/update/'+ data.id"
+              ><button class="btn btn-warning">Güncelle</button></router-link
             >
             <button @click="del(data.id)" class="btn btn-error">Sil</button>
           </td>
@@ -39,13 +71,13 @@
 import router from '@/router';
 
 export default {
-  name: "SelledProductListView",
+  name: "HarvestListView",
   data() {
     return {
-      fieldName: ["*", "ÜRÜN ADI", "MİKTAR", "BİRİM", "BİRİM FİYATI", "TOPLAM FİYATI", "AÇIKLAMA", "TARİH"],
+      fieldName: ["*","TARLA", "ÜRÜN","MİKTAR","BİRİM FİYATI", "TOPLAM FİYATI", "TARİH", "AÇIKLAMA"],
       datas: [],
-      url: "http://localhost:8081/api/v1/selledProduct",
-      routerUrl: "/selled-product/detail/",
+      url: process.env.VUE_APP_API_BASE_URL+"/api/v1/harvest",
+      routerUrl: "/harvest",
     };
   },
   mounted() {
@@ -57,7 +89,7 @@ export default {
     fetch(_this.url, requestOptions)
       .then((response) => response.json())
       .then((data) => (_this.datas = data));
-      console.log(this.datas);
+      
   },
   methods: {
     del: function (key) {
@@ -71,15 +103,21 @@ export default {
         fetch(url, requestOptions)
           .then((response) => {
             if(response.status==204){
-              console.log("Başarılı");
               router.go(0);
             }
           })
       }
     },
+    returnId: function(data){
+      return data?data.id:'';
+    }
   },
+  watch: {
+
+  }
 };
 </script>
 
 <style>
+
 </style>
