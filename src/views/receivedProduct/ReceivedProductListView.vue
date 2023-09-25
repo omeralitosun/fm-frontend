@@ -24,8 +24,11 @@
             </div>
           </td>
           <td>
-            <router-link :to="routerUrl + data.id"
+            <router-link :to="routerUrl + '/detail/' + data.id"
               ><button class="btn btn-submit">Detay</button></router-link
+            >
+            <router-link :to="routerUrl + '/update/' + data.id"
+              ><button class="btn btn-warning">Güncelle</button></router-link
             >
             <button @click="del(data.id)" class="btn btn-error">Sil</button>
           </td>
@@ -36,16 +39,25 @@
 </template>
 
 <script>
-import router from '@/router';
+import router from "@/router";
 
 export default {
   name: "ReceivedProductListView",
   data() {
     return {
-      fieldName: ["*", "ÜRÜN ADI", "MİKTAR", "BİRİM", "BİRİM FİYATI", "TOPLAM FİYATI", "AÇIKLAMA", "TARİH"],
+      fieldName: [
+        "*",
+        "ÜRÜN ADI",
+        "MİKTAR",
+        "BİRİM",
+        "BİRİM FİYATI",
+        "TOPLAM FİYATI",
+        "AÇIKLAMA",
+        "TARİH",
+      ],
       datas: [],
-      url:  process.env.VUE_APP_API_BASE_URL+"/api/v1/receivedProduct",
-      routerUrl: "/received-product/detail/",
+      url: process.env.VUE_APP_API_BASE_URL + "/api/v1/receivedProduct",
+      routerUrl: "/received-product",
     };
   },
   mounted() {
@@ -57,24 +69,23 @@ export default {
     fetch(_this.url, requestOptions)
       .then((response) => response.json())
       .then((data) => (_this.datas = data));
-      console.log(this.datas);
+    console.log(this.datas);
   },
   methods: {
     del: function (key) {
       if (
         confirm("Silmek istediğinize emin misiniz? Bu işlem geri alınamaz!")
       ) {
-        var url = this.url+"/"+key;
+        var url = this.url + "/" + key;
         const requestOptions = {
-          method: "DELETE"
+          method: "DELETE",
         };
-        fetch(url, requestOptions)
-          .then((response) => {
-            if(response.status==204){
-              console.log("Başarılı");
-              router.go(0);
-            }
-          })
+        fetch(url, requestOptions).then((response) => {
+          if (response.status == 204) {
+            console.log("Başarılı");
+            router.go(0);
+          }
+        });
       }
     },
   },

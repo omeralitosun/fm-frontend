@@ -24,8 +24,11 @@
             </div>
           </td>
           <td>
-            <router-link :to="routerUrl + data.id"
+            <router-link :to="routerUrl +'/detail/'+ data.id"
               ><button class="btn btn-submit">Detay</button></router-link
+            >
+            <router-link :to="routerUrl +'/update/'+ data.id"
+              ><button class="btn btn-warning">Güncelle</button></router-link
             >
             <button @click="del(data.id)" class="btn btn-error">Sil</button>
           </td>
@@ -44,8 +47,8 @@ export default {
     return {
       fieldName: ["*", "ÜRÜN ADI", "MİKTAR", "BİRİM", "BİRİM FİYATI", "TOPLAM FİYATI", "AÇIKLAMA", "TARİH"],
       datas: [],
-      url: "http://localhost:8081/api/v1/selledProduct",
-      routerUrl: "/selled-product/detail/",
+      url: process.env.VUE_APP_API_BASE_URL+"/api/v1/selledProduct",
+      routerUrl: "/selled-product",
     };
   },
   mounted() {

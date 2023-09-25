@@ -11,32 +11,32 @@
       </thead>
       <tbody>
         <tr v-for="(data, ind) in datas" :key="ind">
-          <td>
+          <td :data-label="fieldName[0]">
             <div>
               {{ ind+1 }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[1]">
             <div>
               <router-link :to="'/field/detail/'+returnId(data.equipment)" >{{ data.equipment!=null?data.equipment.name:'' }}</router-link>
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[2]">
             <div>
               {{ data.maintenanceType }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[3]">
             <div>
               {{ data.cost }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[4]">
             <div>
               {{ data.date }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[5]">
             <div>
               {{ data.comment }}
             </div>

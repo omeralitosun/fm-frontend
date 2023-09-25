@@ -11,43 +11,43 @@
       </thead>
       <tbody>
         <tr v-for="(data, ind) in datas" :key="ind">
-          <td>
+          <td :data-label="fieldName[0]">
             <div>
               {{ ind+1 }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[1]">
             <div>
               <router-link :to="'/field/detail/'+returnId(data.field)" >{{ data.field!=null?data.field.name:'' }}</router-link>
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[2]">
             <div>
               {{ data.name }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[3]">
             <div>
               {{ data.amount }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[4]">
             <div>
               {{ data.unitPrice }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[5]">
             <div>
               {{  Number(data.totalPrice)
             .toLocaleString('tr') }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[6]">
             <div>
               {{ data.date }}
             </div>
           </td>
-          <td>
+          <td :data-label="fieldName[7]">
             <div>
               {{ data.comment }}
             </div>
