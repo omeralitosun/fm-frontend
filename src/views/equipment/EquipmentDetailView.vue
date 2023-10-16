@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <div class="btn-group">
+    <div class="btn-group" style="float: right;">
       <router-link :to="'/equipment/update/'+id"><button class="btn btn-warning">Güncelle</button></router-link>
       <button @click="del(id)" class="btn btn-error">Sil</button>
     </div>

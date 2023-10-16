@@ -1,5 +1,9 @@
 <template>
   <div class="detail">
+    <div class="btn-group" style="float: right;">
+      <router-link :to="'/equipment/update/'+id"><button class="btn btn-warning">Güncelle</button></router-link>
+      <button @click="del(id)" class="btn btn-error">Sil</button>
+    </div>
     <div class="content">
       <div class="item">
         <label for="decare">Tarla</label>
@@ -11,7 +15,8 @@
       </div>
       <div class="item">
         <label for="decare">Maliyet</label>
-        <div type="text" name="type" id="type">{{ datas.cost }}</div>
+        <div type="text" name="type" id="type">{{ Number(datas.cost)
+            .toLocaleString('tr') }} ₺</div>
       </div>
       <div class="item">
         <label for="decare">Açıklama</label>

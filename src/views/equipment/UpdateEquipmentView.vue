@@ -66,25 +66,34 @@ export default {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       };
-      fetch(this.putEquipmentUrl + this.equipmentId, requestOptions)
-        .then((response) => {
+      fetch(this.putEquipmentUrl + this.equipmentId, requestOptions).then(
+        (response) => {
           if (response.ok) {
-            return response.json();
+            response.json().then((data) => {
+              this.$refs.alert.showAlert(
+                "success",
+                "Kayıt Başarılı",
+                "Başarılı"
+              );
+              setTimeout(
+                () => router.push({ path: "/equipment/detail/" + data.id }),
+                1000
+              );
+            });
           } else {
-            this.$refs.alert.showAlert(
-              "error",
-              "Beklenmeyen bir hata oluştu. Aksiyon Kaydedilemedi",
-              "Hata"
-            );
+            response.json().then((error) => {
+              var messages = Object.keys(error.message).map(function (key) {
+                return error.message[key];
+              });
+              this.$refs.alert.showAlert(
+                "error",
+                "Açıklama: \n" + messages,
+                "Hata: Status " + response.status + ", " + error.type
+              );
+            });
           }
-        })
-        .then((data) => {
-          this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
-          setTimeout(
-            () => router.push({ path: "/equipment/detail/" + data.id }),
-            1000
-          );
-        });
+        }
+      );
     },
     getEquipmentType() {
       var _this = this;

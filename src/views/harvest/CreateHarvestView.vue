@@ -19,6 +19,19 @@
           </select>
         </div>
         <div class="item">
+          <label>Sezon</label> <br />
+          <select class="input" placeholder="Sezon" v-model="harvest.seasonId">
+            <option disabled :value="null">Sezon</option>
+            <option
+              v-for="(season, index) in seasons"
+              :key="index"
+              :value="season.id"
+            >
+              {{ season.name }}
+            </option>
+          </select>
+        </div>
+        <div class="item">
           <label>Ürün Adı</label> <br />
           <input
             class="input"
@@ -83,6 +96,7 @@ export default {
     return {
       harvest: {
         fieldId: null,
+        seasonId: null,
         name: null,
         amount: null,
         unitPrice: null,
@@ -90,8 +104,10 @@ export default {
         date: null,
       },
       fields: null,
+      seasons: null,
       postHarvestUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/harvest",
       getFieldUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/field",
+      getSeasonUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/season",
     };
   },
   methods: {
@@ -103,25 +119,28 @@ export default {
       };
 
       console.log(this.harvest);
-      fetch(this.postHarvestUrl, requestOptions)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
+      fetch(this.postHarvestUrl, requestOptions).then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
+            setTimeout(
+              () => router.push({ path: "/harvest/detail/" + data.id }),
+              1000
+            );
+          });
+        } else {
+          response.json().then((error) => {
+            var messages = Object.keys(error.message).map(function (key) {
+              return error.message[key];
+            });
             this.$refs.alert.showAlert(
               "error",
-              "Beklenmeyen bir hata oluştu. Kaydedilemedi",
-              "Hata"
+              "Açıklama: \n" + messages,
+              "Hata: Status " + response.status + ", " + error.type
             );
-          }
-        })
-        .then((data) => {
-          this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
-          setTimeout(
-            () => router.push({ path: "/harvest/detail/" + data.id }),
-            1000
-          );
-        });
+          });
+        }
+      });
     },
     getFields: function () {
       var _this = this;
@@ -135,9 +154,22 @@ export default {
           _this.fields = data;
         });
     },
+    getSeasons: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(this.getSeasonUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          _this.seasons = data;
+        });
+    },
   },
   created() {
     this.getFields();
+    this.getSeasons();
   },
 };
 </script>

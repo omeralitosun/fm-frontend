@@ -19,6 +19,19 @@
           </select>
         </div>
         <div class="item">
+          <label>Sezon</label> <br />
+          <select class="input" placeholder="Sezon" v-model="action.seasonId">
+            <option disabled :value="null">Sezon</option>
+            <option
+              v-for="(season, index) in seasons"
+              :key="index"
+              :value="season.id"
+            >
+              {{ season.name }}
+            </option>
+          </select>
+        </div>
+        <div class="item">
           <label>Yapılan İşlem</label> <br />
           <select v-model="action.process" placeholder="İşlem" class="input">
             <option disabled :value="null">Yapılan İşlem</option>
@@ -159,9 +172,11 @@ export default {
         comment: null,
         date: null,
         fieldId: null,
+        seasonId: null,
       },
       harvest: {
         fieldId: null,
+        seasonId: null,
         name: null,
         amount: null,
         unitPrice: null,
@@ -172,74 +187,91 @@ export default {
       process: null,
       units: null,
       fields: null,
+      seasons: null,
       postActionUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/actionTaken",
       postHarvestsUrl:
         process.env.VUE_APP_API_BASE_URL + "/api/v1/harvest/bulkCreate",
       getFieldUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/field",
+      getSeasonUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/season",
       getProcessUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/enums/process",
       getUnitUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/enums/unit",
     };
   },
   methods: {
     submit: function () {
-      console.log(this.harvests);
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.action),
       };
-      fetch(this.postActionUrl, requestOptions)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
+      fetch(this.postActionUrl, requestOptions).then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            if (this.action.process == "REAP" && this.harvests.length > 0) {
+              this.harvests.forEach((harvest) => {
+                harvest.fieldId = this.action.fieldId;
+                harvest.seasonId = this.action.seasonId;
+              });
+
+              const requestOptions2 = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(this.harvests),
+              };
+
+              fetch(this.postHarvestsUrl, requestOptions2).then((response) => {
+                if (response.ok) {
+                  this.$refs.alert.showAlert(
+                    "success",
+                    "Kayıt Başarılı",
+                    "Başarılı"
+                  );
+                  setTimeout(
+                    () =>
+                      router.push({ path: "/action-taken/detail/" + data.id }),
+                    1000
+                  );
+                } else {
+                  response.json().then((error) => {
+                    var messages = Object.keys(error.message).map(function (
+                      key
+                    ) {
+                      return error.message[key];
+                    });
+                    this.$refs.alert.showAlert(
+                      "error",
+                      "Açıklama: \n" + messages,
+                      "Hata: Status " + response.status + ", " + error.type
+                    );
+                  });
+                }
+              });
+            } else {
+              this.$refs.alert.showAlert(
+                "success",
+                "Kayıt Başarılı",
+                "Başarılı"
+              );
+              setTimeout(
+                () => router.push({ path: "/action-taken/detail/" + data.id }),
+                1000
+              );
+            }
+          });
+        } else {
+          response.json().then((error) => {
+            console.log(error)
+            var messages = Object.keys(error.message).map(function (key) {
+              return error.message[key];
+            });
             this.$refs.alert.showAlert(
               "error",
-              "Beklenmeyen bir hata oluştu. Aksiyon Kaydedilemedi",
-              "Hata"
+              "Açıklama: \n" + messages,
+              "Hata: Status " + response.status + ", " + error.type
             );
-          }
-        })
-        .then((data) => {
-          if (this.action.process == "REAP" && this.harvests.length > 0) {
-            this.harvests.forEach((harvest) => {
-              harvest.fieldId = this.action.fieldId;
-            });
-
-            const requestOptions2 = {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(this.harvests),
-            };
-
-            fetch(this.postHarvestsUrl, requestOptions2).then((response) => {
-              if (response.ok) {
-                this.$refs.alert.showAlert(
-                  "success",
-                  "Kayıt Başarılı",
-                  "Başarılı"
-                );
-                setTimeout(
-                  () =>
-                    router.push({ path: "/action-taken/detail/" + data.id }),
-                  1000
-                );
-              } else {
-                this.$refs.alert.showAlert(
-                  "error",
-                  "Beklenmeyen bir hata oluştu. Biçim Kaydedilemedi",
-                  "Hata"
-                );
-              }
-            });
-          } else {
-            this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
-            setTimeout(
-              () => router.push({ path: "/action-taken/detail/" + data.id }),
-              1000
-            );
-          }
-        });
+          });
+        }
+      });
     },
     addHarvest() {
       this.harvests.push({
@@ -276,10 +308,23 @@ export default {
         .then((response) => response.json())
         .then((data) => (_this.process = data));
     },
+    getSeasons: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(this.getSeasonUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          _this.seasons = data;
+        });
+    },
   },
   created() {
     this.getFields();
     this.getProcess();
+    this.getSeasons();
   },
 };
 </script>

@@ -104,21 +104,29 @@ export default {
       fetch(this.postMaintenanceUrl, requestOptions)
         .then((response) => {
           if (response.ok) {
-            return response.json();
+            response.json().then((data) => {
+              this.$refs.alert.showAlert(
+                "success",
+                "Kayıt Başarılı",
+                "Başarılı"
+              );
+              setTimeout(
+                () => router.push({ path: "/maintenance/detail/" + data.id }),
+                1000
+              );
+            });
           } else {
-            this.$refs.alert.showAlert(
-              "error",
-              "Beklenmeyen bir hata oluştu. Kaydedilemedi",
-              "Hata"
-            );
+            response.json().then((error) => {
+              var messages = Object.keys(error.message).map(function (key) {
+                return error.message[key];
+              });
+              this.$refs.alert.showAlert(
+                "error",
+                "Açıklama: \n" + messages,
+                "Hata: Status " + response.status + ", " + error.type
+              );
+            });
           }
-        })
-        .then((data) => {
-          this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
-          setTimeout(
-            () => router.push({ path: "/maintenance/detail/" + data.id }),
-            1000
-          );
         });
     },
     getEquipments: function () {

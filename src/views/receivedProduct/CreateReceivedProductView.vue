@@ -102,25 +102,29 @@ export default {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       };
-      fetch(this.postReceivedUrl, requestOptions)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
+      fetch(this.postReceivedUrl, requestOptions).then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
+            setTimeout(
+              () =>
+                router.push({ path: "/received-product/detail/" + data.id }),
+              1000
+            );
+          });
+        } else {
+          response.json().then((error) => {
+            var messages = Object.keys(error.message).map(function (key) {
+              return error.message[key];
+            });
             this.$refs.alert.showAlert(
               "error",
-              "Beklenmeyen bir hata oluştu. Kaydedilemedi",
-              "Hata"
+              "Açıklama: \n" + messages,
+              "Hata: Status " + response.status + ", " + error.type
             );
-          }
-        })
-        .then((data) => {
-          this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
-          setTimeout(
-            () => router.push({ path: "/received-product/detail/" + data.id }),
-            1000
-          );
-        });
+          });
+        }
+      });
     },
   },
   mounted() {

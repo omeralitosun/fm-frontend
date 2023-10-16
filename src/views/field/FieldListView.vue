@@ -71,35 +71,27 @@ export default {
       if (
         confirm("Silmek istediğinize emin misiniz? Bu işlem geri alınamaz!")
       ) {
-        
         var url = this.url + "/" + key;
         const requestOptions = {
           method: "DELETE",
         };
 
         fetch(url, requestOptions).then((response) => {
-
           if (response.status == 204) {
-
-            this.$refs.alert.showAlert("success", "Kayıt Silindi","Başarılı");
+            this.$refs.alert.showAlert("success", "Kayıt Silindi", "Başarılı");
             setTimeout(() => router.go(0), 500);
-            
           } else if (response.status == 409) {
-
             this.$refs.alert.showAlert(
               "error",
               "Bu kayıda ait başka alt kayıtları kontrol edip tekrar deneyin.",
               "Bu kayıdı silemezsiniz."
             );
-
           } else {
-
             this.$refs.alert.showAlert(
               "error",
               "Beklenmeyen bir hata oluştu",
               "Hata"
             );
-
           }
         });
       }

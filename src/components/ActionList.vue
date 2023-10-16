@@ -1,6 +1,19 @@
 <template>
   <div style="border: 2px solid #07530bf6">
     <div class="baslik" @click="open()">Alınan Aksiyonlar</div>
+    <div style="float: right" :class="{ close: isClosed }">
+      <label>Sezon: </label>
+      <select class="input" placeholder="Sezon" v-model="seasonId">
+        <option disabled :value="null">Sezon</option>
+        <option
+          v-for="(season, index) in seasons"
+          :key="index"
+          :value="season.id"
+        >
+          {{ season.name }}
+        </option>
+      </select>
+    </div>
     <div class="list" :class="{ close: isClosed }">
       <table style="margin: auto">
         <thead>
@@ -13,27 +26,28 @@
         </thead>
         <tbody>
           <tr v-for="(data, ind) in datas" :key="ind">
-            <td>
+            <td :data-label="fieldName[0]">
               <div>
                 {{ ind + 1 }}
               </div>
             </td>
-            <td>
+            <td :data-label="fieldName[1]">
               <div>
                 {{ data.process }}
               </div>
             </td>
-            <td>
+            <td :data-label="fieldName[2]">
               <div>
-                {{ data.cost }}
+                {{ Number(data.cost)
+            .toLocaleString('tr') }} ₺
               </div>
             </td>
-            <td>
+            <td :data-label="fieldName[3]">
               <div>
                 {{ data.date }}
               </div>
             </td>
-            <td>
+            <td :data-label="fieldName[4]">
               <div>
                 {{ data.comment }}
               </div>
@@ -56,20 +70,19 @@
 
 <script>
 export default {
-  props:['fieldId'],
+  props: ["fieldId"],
   data() {
     return {
       isClosed: true,
-      fieldName: [
-        "*",
-        "YAPILAN İŞLEM",
-        "MALİYET",
-        "TARİH",
-        "AÇIKLAMA",
-      ],
+      fieldName: ["*", "YAPILAN İŞLEM", "MALİYET", "TARİH", "AÇIKLAMA"],
       datas: [],
-      getActionsUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/actionTaken/byField?fieldId=",
-      deleteUrl: process.env.VUE_APP_API_BASE_URL +"/api/v1/actionTaken/",
+      seasons: null,
+      seasonId: null,
+      getActionsUrl:
+        process.env.VUE_APP_API_BASE_URL +
+        "/api/v1/actionTaken/byFieldandSeason?",
+      getSeasonUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/season",
+      deleteUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/actionTaken/",
       routerUrl: "/action-taken",
     };
   },
@@ -85,8 +98,8 @@ export default {
         fetch(url, requestOptions).then((response) => {
           if (response.status == 204) {
             console.log("Başarılı");
-            console.log(data)
-            this.datas.splice(this.datas.indexOf(data),1);
+            console.log(data);
+            this.datas.splice(this.datas.indexOf(data), 1);
           }
         });
       }
@@ -96,18 +109,46 @@ export default {
     },
     open: function () {
       this.isClosed = !this.isClosed;
-      !this.isDataGetted?this.getActions():null;
+      !this.isDataGetted ? this.getActions() : null;
     },
     getActions: function () {
-      this.isDataGetted=true;
+      this.isDataGetted = true;
       var _this = this;
       const requestOptions = {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       };
-      fetch(_this.getActionsUrl+this.fieldId, requestOptions)
+      fetch(
+        _this.getActionsUrl +
+          "fieldId=" +
+          this.fieldId +
+          "&seasonId=" +
+          this.seasonId,
+        requestOptions
+      )
         .then((response) => response.json())
         .then((data) => (_this.datas = data));
+    },
+    getSeasons: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(this.getSeasonUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          _this.seasons = data;
+          _this.seasonId = data[0].id;
+        });
+    },
+  },
+  mounted() {
+    this.getSeasons();
+  },
+  watch: {
+    seasonId() {
+      this.fieldId != undefined ? this.getActions() : null;
     },
   },
 };

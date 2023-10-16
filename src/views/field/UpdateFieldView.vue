@@ -56,42 +56,45 @@ export default {
         body: JSON.stringify(this.data),
       };
 
-      fetch(this.putUrl+this.fieldId, requestOptions)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
+      fetch(this.putUrl + this.fieldId, requestOptions).then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
+            setTimeout(
+              () => router.push({ path: "/field/detail/" + data.id }),
+              1000
+            );
+          });
+        } else {
+          response.json().then((error) => {
+            var messages = Object.keys(error.message).map(function (key) {
+              return error.message[key];
+            });
             this.$refs.alert.showAlert(
               "error",
-              "Beklenmeyen bir hata oluştu",
-              "Hata"
+              "Açıklama: \n" + messages,
+              "Hata: Status " + response.status + ", " + error.type
             );
-          }
-        })
-        .then((data) => {
-          this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
-          setTimeout(
-            () => router.push({ path: "/field/detail/" + data.id }),
-            1000
-          );
-        });
+          });
+        }
+      });
     },
   },
-  created(){
+  created() {
     var _this = this;
-      const requestOptions = {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      };
-      fetch(_this.getUrl, requestOptions)
-        .then((response) => response.json())
-        .then((data) => {
-          _this.fieldId = data.id;
-          _this.data.name = data.name;
-          _this.data.decare = data.decare;
-          console.log(_this.data);
-        });
-  }
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch(_this.getUrl, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        _this.fieldId = data.id;
+        _this.data.name = data.name;
+        _this.data.decare = data.decare;
+        console.log(_this.data);
+      });
+  },
 };
 </script>
   

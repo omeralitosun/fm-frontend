@@ -33,13 +33,14 @@
           </td>
           <td :data-label="fieldName[4]">
             <div>
-              {{ data.unitPrice }}
+              {{ Number(data.unitPrice)
+            .toLocaleString('tr') }} ₺
             </div>
           </td>
           <td :data-label="fieldName[5]">
             <div>
               {{  Number(data.totalPrice)
-            .toLocaleString('tr') }}
+            .toLocaleString('tr') }} ₺
             </div>
           </td>
           <td :data-label="fieldName[6]">

@@ -36,6 +36,8 @@ import SelledProductDetailView from '../views/selledProduct/SelledProductDetailV
 import SelledProductListView from '../views/selledProduct/SelledProductListView.vue'
 import UpdateSelledProductView from '../views/selledProduct/UpdateSelledProductView.vue'
 
+import CreateSeasonView from '../views/season/CreateSeasonView.vue'
+
 const routes = [
   //Home
   {
@@ -192,7 +194,12 @@ const routes = [
     name: 'selledProductList',
     component: SelledProductListView
   },
-
+  // Season
+  {
+    path: '/season/new',
+    name: 'createSeason',
+    component: CreateSeasonView
+  },
 ]
 
 const router = createRouter({

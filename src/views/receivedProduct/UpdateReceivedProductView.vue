@@ -106,25 +106,35 @@ export default {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       };
-      fetch(this.putReceivedUrl + this.receivedId, requestOptions)
-        .then((response) => {
+      fetch(this.putReceivedUrl + this.receivedId, requestOptions).then(
+        (response) => {
           if (response.ok) {
-            return response.json();
+            response.json().then((data) => {
+              this.$refs.alert.showAlert(
+                "success",
+                "Kayıt Başarılı",
+                "Başarılı"
+              );
+              setTimeout(
+                () =>
+                  router.push({ path: "/received-product/detail/" + data.id }),
+                1000
+              );
+            });
           } else {
-            this.$refs.alert.showAlert(
-              "error",
-              "Beklenmeyen bir hata oluştu. Kaydedilemedi",
-              "Hata"
-            );
+            response.json().then((error) => {
+              var messages = Object.keys(error.message).map(function (key) {
+                return error.message[key];
+              });
+              this.$refs.alert.showAlert(
+                "error",
+                "Açıklama: \n" + messages,
+                "Hata: Status " + response.status + ", " + error.type
+              );
+            });
           }
-        })
-        .then((data) => {
-          this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
-          setTimeout(
-            () => router.push({ path: "/received-product/detail/" + data.id }),
-            1000
-          );
-        });
+        }
+      );
     },
     getUnit: function () {
       var _this = this;
@@ -145,13 +155,13 @@ export default {
       fetch(this.getReceivedUrl, requestOptions)
         .then((response) => response.json())
         .then((data) => {
-            _this.receivedId = _this.id;
-            _this.data.name= data.name;
-            _this.data.amount= data.amount;
-            _this.data.unit= _this.options[data.unit];
-            _this.data.unitPrice= data.unitPrice;
-            _this.data.comment= data.comment;
-            _this.data.date= data.date;
+          _this.receivedId = _this.id;
+          _this.data.name = data.name;
+          _this.data.amount = data.amount;
+          _this.data.unit = _this.options[data.unit];
+          _this.data.unitPrice = data.unitPrice;
+          _this.data.comment = data.comment;
+          _this.data.date = data.date;
         });
     },
   },

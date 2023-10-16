@@ -1,13 +1,17 @@
 <template>
+  <div>
     <div>
-      <div>
-        <vue-basic-alert :duration="300" :closeIn="5000" ref="alert" />
-      </div>
-      <div class="create">
+      <vue-basic-alert :duration="300" :closeIn="5000" ref="alert" />
+    </div>
+    <div class="create">
       <div class="content">
         <div class="item">
           <label>Ekipman</label> <br />
-          <select class="input" placeholder="Ekipman" v-model="maintenance.equipmentId">
+          <select
+            class="input"
+            placeholder="Ekipman"
+            v-model="maintenance.equipmentId"
+          >
             <option disabled :value="null">Ekipman</option>
             <option
               v-for="(equipment, index) in equipments"
@@ -68,117 +72,127 @@
       </div>
       <button class="btn btn-submit" @click="submit()">Kaydet</button>
     </div>
-    </div>
-  </template>
+  </div>
+</template>
   
   <script>
-  import router from "@/router";
-  
-  export default {
-    name: "CreateMaintenanceView",
-    props: ['id'],
-    data() {
-      return {
-        maintenanceId: null,
-        maintenanceTypes: null,
-        maintenance: {
-          maintenanceType: null,
-          cost: null,
-          comment: null,
-          date: null,
-          equipmentId: null,
-        },
-        equipments: null,
-        putMaintenanceUrl:
-          process.env.VUE_APP_API_BASE_URL + "/api/v1/maintenance/",
-        getEquipmentUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/equipment",
-        getMaintenanceTypeUrl:
-          process.env.VUE_APP_API_BASE_URL + "/api/v1/enums/maintenance-type",
-        getMaintenanceUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/maintenance/" + this.id
+import router from "@/router";
+
+export default {
+  name: "CreateMaintenanceView",
+  props: ["id"],
+  data() {
+    return {
+      maintenanceId: null,
+      maintenanceTypes: null,
+      maintenance: {
+        maintenanceType: null,
+        cost: null,
+        comment: null,
+        date: null,
+        equipmentId: null,
+      },
+      equipments: null,
+      putMaintenanceUrl:
+        process.env.VUE_APP_API_BASE_URL + "/api/v1/maintenance/",
+      getEquipmentUrl: process.env.VUE_APP_API_BASE_URL + "/api/v1/equipment",
+      getMaintenanceTypeUrl:
+        process.env.VUE_APP_API_BASE_URL + "/api/v1/enums/maintenance-type",
+      getMaintenanceUrl:
+        process.env.VUE_APP_API_BASE_URL + "/api/v1/maintenance/" + this.id,
+    };
+  },
+  methods: {
+    submit: function () {
+      const requestOptions = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(this.maintenance),
       };
-    },
-    methods: {
-      submit: function () {
-        
-        const requestOptions = {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(this.maintenance),
-        };
-        fetch(this.putMaintenanceUrl + this.maintenanceId, requestOptions)
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            } else {
+      fetch(this.putMaintenanceUrl + this.maintenanceId, requestOptions).then(
+        (response) => {
+          if (response.ok) {
+            response.json().then((data) => {
+              this.$refs.alert.showAlert(
+                "success",
+                "Kayıt Başarılı",
+                "Başarılı"
+              );
+              setTimeout(
+                () => router.push({ path: "/maintenance/detail/" + data.id }),
+                1000
+              );
+            });
+          } else {
+            response.json().then((error) => {
+              var messages = Object.keys(error.message).map(function (key) {
+                return error.message[key];
+              });
               this.$refs.alert.showAlert(
                 "error",
-                "Beklenmeyen bir hata oluştu. Kaydedilemedi",
-                "Hata"
+                "Açıklama: \n" + messages,
+                "Hata: Status " + response.status + ", " + error.type
               );
-            }
-          })
-          .then((data) => {
-            this.$refs.alert.showAlert("success", "Kayıt Başarılı", "Başarılı");
-            setTimeout(
-              () => router.push({ path: "/maintenance/detail/" + data.id }),
-              1000
-            );
-          });
-      },
-      getEquipments: function () {
-  
-        var _this = this;
-        const requestOptions = {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        };
-        fetch(this.getEquipmentUrl, requestOptions)
-          .then((response) => response.json())
-          .then((data) => {
-            
-            _this.equipments = data;
-          });
-      },
-      getMaintenanceTypes: function() {
-        var _this = this;
-        const requestOptions = {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        };
-        fetch(_this.getMaintenanceTypeUrl, requestOptions)
-          .then((response) => response.json())
-          .then((data) => (_this.maintenanceTypes = data));
-      },
-      getMaintenance: function() {
-        var _this = this;
-        const requestOptions = {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        };
-        fetch(_this.getMaintenanceUrl, requestOptions)
-          .then((response) => response.json())
-          .then((data) => {
-            _this.maintenanceId = _this.id,
-            _this.maintenance.maintenanceType = _this.maintenanceTypes[data.maintenanceType];
-            _this.maintenance.cost= data.cost;
-            _this.maintenance.comment= data.comment;
-            _this.maintenance.date= data.date;
-            _this.maintenance.equipmentId= data.equipment? data.equipment.id:"";
+            });
+          }
+        }
+      );
+    },
+    getEquipments: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(this.getEquipmentUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          _this.equipments = data;
         });
-      },
     },
-    created() {
-      this.getEquipments();
-      this.getMaintenanceTypes();
-      this.getMaintenance();
+    getMaintenanceTypes: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(_this.getMaintenanceTypeUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => (_this.maintenanceTypes = data));
     },
-  };
-  </script>
+    getMaintenance: function () {
+      var _this = this;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+      fetch(_this.getMaintenanceUrl, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          (_this.maintenanceId = _this.id),
+            (_this.maintenance.maintenanceType =
+              _this.maintenanceTypes[data.maintenanceType]);
+          _this.maintenance.cost = data.cost;
+          _this.maintenance.comment = data.comment;
+          _this.maintenance.date = data.date;
+          _this.maintenance.equipmentId = data.equipment
+            ? data.equipment.id
+            : "";
+        });
+    },
+  },
+  created() {
+    this.getEquipments();
+    this.getMaintenanceTypes();
+    this.getMaintenance();
+  },
+};
+</script>
   
   <style>
-  .create .btn-submit {
-    position: absolute;
-    left: 100px;
-    bottom: 10px;
-  }
-  </style>
+.create .btn-submit {
+  position: absolute;
+  left: 100px;
+  bottom: 10px;
+}
+</style>
